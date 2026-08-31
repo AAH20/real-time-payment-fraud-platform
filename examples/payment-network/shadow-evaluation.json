@@ -1,0 +1,15 @@
+{
+  "scenario": "Real-time card and account-to-account payment fraud shadow evaluation",
+  "seed": 20260831,
+  "transaction_count": 100000,
+  "account_count": 25000,
+  "fraud_rate": 0.008,
+  "candidate_thresholds": [0.35, 0.45, 0.55, 0.65],
+  "constraints": {"min_recall_pct": 70, "max_p99_ms": 100},
+  "gross_contribution_pct": 0.24,
+  "step_up_band": 0.08,
+  "step_up_cost_usd": 0.12,
+  "cost_per_decision_usd": 0.0008,
+  "baseline_feature_distribution": {"low": 0.8, "medium": 0.15, "high": 0.05},
+  "current_feature_distribution": {"low": 0.5, "medium": 0.3, "high": 0.2}
+}

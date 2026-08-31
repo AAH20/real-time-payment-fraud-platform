@@ -1,0 +1,128 @@
+{
+  "schema_version": "paymentshield/v1",
+  "scenario": "Real-time card and account-to-account payment fraud shadow evaluation",
+  "evidence_level": "deterministic-synthetic-shadow-evaluation",
+  "transactions": 100000,
+  "fraud_transactions": 798,
+  "threshold_candidates": [
+    {
+      "threshold": 0.35,
+      "true_positive": 653,
+      "false_positive": 334,
+      "false_negative": 145,
+      "true_negative": 98868,
+      "fraud_recall_pct": 81.83,
+      "precision_pct": 66.16,
+      "false_positive_pct": 0.34,
+      "approval_rate_pct": 99.01,
+      "fraud_loss_usd": 21532.93,
+      "false_declined_payment_volume_usd": 20242.1,
+      "contribution_lost_to_false_declines_usd": 4858.1,
+      "step_up_and_review_cost_usd": 116.04,
+      "decision_infrastructure_cost_usd": 80.0,
+      "modeled_net_contribution_usd": 1203763.98,
+      "modeled_p99_ms": 9.0
+    },
+    {
+      "threshold": 0.45,
+      "true_positive": 492,
+      "false_positive": 6,
+      "false_negative": 306,
+      "true_negative": 99196,
+      "fraud_recall_pct": 61.65,
+      "precision_pct": 98.8,
+      "false_positive_pct": 0.01,
+      "approval_rate_pct": 99.5,
+      "fraud_loss_usd": 45563.85,
+      "false_declined_payment_volume_usd": 288.27,
+      "contribution_lost_to_false_declines_usd": 69.18,
+      "step_up_and_review_cost_usd": 21.84,
+      "decision_infrastructure_cost_usd": 80.0,
+      "modeled_net_contribution_usd": 1184616.18,
+      "modeled_p99_ms": 9.0
+    },
+    {
+      "threshold": 0.55,
+      "true_positive": 298,
+      "false_positive": 2,
+      "false_negative": 500,
+      "true_negative": 99200,
+      "fraud_recall_pct": 37.34,
+      "precision_pct": 99.33,
+      "false_positive_pct": 0.0,
+      "approval_rate_pct": 99.7,
+      "fraud_loss_usd": 75039.1,
+      "false_declined_payment_volume_usd": 86.17,
+      "contribution_lost_to_false_declines_usd": 20.68,
+      "step_up_and_review_cost_usd": 18.72,
+      "decision_infrastructure_cost_usd": 80.0,
+      "modeled_net_contribution_usd": 1155192.56,
+      "modeled_p99_ms": 9.0
+    },
+    {
+      "threshold": 0.65,
+      "true_positive": 174,
+      "false_positive": 0,
+      "false_negative": 624,
+      "true_negative": 99202,
+      "fraud_recall_pct": 21.8,
+      "precision_pct": 100.0,
+      "false_positive_pct": 0.0,
+      "approval_rate_pct": 99.83,
+      "fraud_loss_usd": 94573.99,
+      "false_declined_payment_volume_usd": 0,
+      "contribution_lost_to_false_declines_usd": 0.0,
+      "step_up_and_review_cost_usd": 10.44,
+      "decision_infrastructure_cost_usd": 80.0,
+      "modeled_net_contribution_usd": 1135686.63,
+      "modeled_p99_ms": 9.0
+    }
+  ],
+  "selected_policy": {
+    "threshold": 0.35,
+    "true_positive": 653,
+    "false_positive": 334,
+    "false_negative": 145,
+    "true_negative": 98868,
+    "fraud_recall_pct": 81.83,
+    "precision_pct": 66.16,
+    "false_positive_pct": 0.34,
+    "approval_rate_pct": 99.01,
+    "fraud_loss_usd": 21532.93,
+    "false_declined_payment_volume_usd": 20242.1,
+    "contribution_lost_to_false_declines_usd": 4858.1,
+    "step_up_and_review_cost_usd": 116.04,
+    "decision_infrastructure_cost_usd": 80.0,
+    "modeled_net_contribution_usd": 1203763.98,
+    "modeled_p99_ms": 9.0
+  },
+  "drift": {
+    "population_stability_index": 0.4529,
+    "status": "review-required",
+    "auto_retrain": false
+  },
+  "degraded_mode": {
+    "feature_store_unavailable": "deterministic rules plus step-up authentication",
+    "model_unavailable": "rules remain active; high-risk or feature-incomplete transactions step up",
+    "auto_freeze_account": false
+  },
+  "production_control": {
+    "mode": "shadow-only",
+    "auto_decline": false,
+    "required_gates": [
+      "calibration",
+      "fairness review",
+      "fraud operations approval",
+      "model risk approval",
+      "canary",
+      "rollback drill"
+    ]
+  },
+  "claim_boundary": [
+    "No bank, card network, payment processor, customer identity or production transaction was accessed",
+    "Transactions, labels, latency, fraud loss, approval value and operating cost are synthetic",
+    "Adapter and payment-network terms describe target contracts, not certification",
+    "Modeled recovered sales are not profit; contribution is calculated separately"
+  ],
+  "receipt_sha256": "6229ff2e4efac67add53d92781549a7f86bc198ac0ad2c2108b156210049bbf5"
+}
