@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: {name: paymentshield}
+spec:
+  serviceName: paymentshield
+  replicas: 1
+  selector: {matchLabels: {app.kubernetes.io/name: paymentshield}}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: paymentshield}
+    spec:
+      automountServiceAccountToken: false
+      securityContext: {runAsNonRoot: true, seccompProfile: {type: RuntimeDefault}}
+      containers:
+        - name: decision-api
+          image: ghcr.io/aah20/paymentshield:1.0.0
+          imagePullPolicy: Always
+          ports: [{name: http, containerPort: 8080}]
+          env:
+            - {name: PAYMENTSHIELD_ENV, value: production}
+            - {name: PAYMENTSHIELD_DB, value: /data/paymentshield.db}
+            - {name: PAYMENTSHIELD_POLICY_VERSION, value: shadow-v1}
+          envFrom: [{secretRef: {name: paymentshield-secrets}}]
+          readinessProbe: {httpGet: {path: /health/ready, port: http}}
+          livenessProbe: {httpGet: {path: /health/live, port: http}}
+          resources:
+            requests: {cpu: 250m, memory: 256Mi}
+            limits: {cpu: "2", memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
+            readOnlyRootFilesystem: true
+          volumeMounts: [{name: state, mountPath: /data}]
+  volumeClaimTemplates:
+    - metadata: {name: state}
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources: {requests: {storage: 10Gi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: paymentshield}
+spec:
+  selector: {app.kubernetes.io/name: paymentshield}
+  ports: [{name: http, port: 80, targetPort: http}]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: paymentshield-default-deny}
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: {name: paymentshield-ingress}
+spec:
+  podSelector: {matchLabels: {app.kubernetes.io/name: paymentshield}}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: ingress-nginx}}
+        - namespaceSelector: {matchLabels: {kubernetes.io/metadata.name: monitoring}}
+      ports: [{protocol: TCP, port: 8080}]

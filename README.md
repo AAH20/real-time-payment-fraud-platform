@@ -39,6 +39,17 @@ pytest -q
 paymentshield examples/payment-network/shadow-evaluation.json --output generated/payment-network
 ```
 
+## Live recommendation API and latency evidence
+
+```bash
+paymentshield-api --database ./paymentshield.db --port 8080
+paymentshield-benchmark --decisions 10000 --max-p99-ms 10
+```
+
+`POST /v1/decisions` is authenticated in production mode, idempotent by transaction ID, detects payload conflicts, persists recommendation receipts and exports Prometheus decision and latency metrics. It remains recommendation-only: it does not connect to an acquirer or execute approve/decline actions.
+
+The benchmark measures only in-process Python decision latency. It explicitly excludes HTTP, TLS, network, feature-store, stream and payment-processor latency, so it is not presented as an end-to-end authorization SLA.
+
 The deterministic fixture generates 100,000 transactions with behavioral, velocity, device, beneficiary, impossible-travel and graph-linked mule signals. Four thresholds compete on:
 
 - fraud recall and precision;
@@ -87,6 +98,8 @@ The benchmark separates gross payment volume, false-declined payment volume, con
 ## Production acceptance
 
 This repository is an evaluation harness, not a production fraud service. A live deployment requires authorized data, PCI-scoped architecture, model-risk governance, privacy assessment, resilient feature serving, adversarial testing, temporal validation, human appeal, regulatory mapping and processor-specific certification. See [production readiness](docs/production-readiness.md).
+
+The included Kubernetes StatefulSet is a durable single-writer recommendation service. Multi-replica production serving requires an external low-latency feature store and managed decision ledger; SQLite is not represented as horizontally scalable.
 
 ## Work with A2Z SOC
 

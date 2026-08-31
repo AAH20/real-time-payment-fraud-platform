@@ -9,11 +9,13 @@ Exact search volume varies by market and requires proprietary tooling. Terms map
 | Cybersecurity / Account Takeover | Device, travel, velocity and beneficiary signals | No identity provider connected |
 | FinTech / Digital Payments | Card and A2A transaction economics | No payment network accessed |
 | Graph Machine Learning | Shared device/beneficiary mule indicator | Explainable baseline, not GNN |
-| Big Data / Real-Time Analytics | 100K-event fixture and event-stream architecture | Local batch evaluator |
+| Big Data / Real-Time Analytics | 100K-event fixture, recommendation API and latency benchmark | In-process evidence; no payment-network SLA |
 | Microsoft Fabric / Power BI | Real-Time Intelligence and BI target | No Fabric capacity deployed |
-| Kafka / Azure Event Hubs | Replayable event-stream target | Architecture contract |
+| Kafka / Azure Event Hubs / Event-Driven Architecture | Replayable event-stream target and idempotent decision boundary | API implemented; broker connector remains integration |
 | MLOps / Model Monitoring | Threshold evaluation and PSI drift gate | No automatic retraining |
 | Explainable / Responsible AI | Feature-level deterministic score and human gates | Baseline implementation |
+| Kubernetes / DevOps / Cloud Computing | Hardened StatefulSet, health probes, NetworkPolicy and container CI | Single-writer reference deployment |
+| Low-Latency Systems / Model Serving | Measured in-process P50/P95/P99 benchmark | Excludes network and feature-store latency |
 
 Sources:
 

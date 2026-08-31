@@ -10,9 +10,11 @@ jobs:
         with: {python-version: '3.13'}
       - run: pip install -e '.[test]'
       - run: pytest -q
+      - run: paymentshield-benchmark --decisions 10000 --max-p99-ms 10
       - run: paymentshield examples/payment-network/shadow-evaluation.json --output generated/payment-network
       - run: git diff --exit-code generated/payment-network
       - run: python -m compileall -q src tests
+      - run: docker build -t paymentshield:${{ github.sha }} .
       - uses: azure/cli@v2
         with:
           inlineScript: az bicep build --file infra/azure/main.bicep --outfile /tmp/main.json

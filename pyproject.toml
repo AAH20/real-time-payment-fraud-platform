@@ -4,17 +4,25 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "paymentshield-ai"
-version = "0.1.0"
+version = "1.0.0"
 description = "Real-time payment fraud detection, graph risk, false-decline economics and MLOps evaluation"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [{name = "Ahmed Hassan"}]
+dependencies = [
+  "fastapi>=0.116,<1",
+  "prometheus-client>=0.22,<1",
+  "pydantic>=2.11,<3",
+  "uvicorn>=0.35,<1",
+]
 
 [project.optional-dependencies]
-test = ["pytest>=8.4,<9"]
+test = ["httpx>=0.28,<1", "pytest>=8.4,<9"]
 
 [project.scripts]
 paymentshield = "paymentshield.cli:main"
+paymentshield-api = "paymentshield.api:main"
+paymentshield-benchmark = "paymentshield.benchmark:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
